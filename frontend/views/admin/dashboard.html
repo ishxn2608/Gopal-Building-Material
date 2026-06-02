@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Admin Dashboard – Gopal Building Material</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gold:#b89a6a;--gold-lt:#d4b896;--dark:#2c2420;--mid:#5a4a40;--soft:#8a7060;
+  --cream:#fdf8f3;--warm:#f5ede0;--white:#fff;--border:#e8ddd5;
+  --green:#2d6a4f;--orange:#e07a2f;--red:#c0392b;
+}
+body{font-family:'Segoe UI',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--dark);padding:0 2rem;height:60px;display:flex;align-items:center;justify-content:space-between}
+.topbar h1{color:var(--gold-lt);font-size:1rem;font-weight:500;letter-spacing:0.05em}
+.topbar span{color:rgba(255,255,255,.4);font-size:0.8rem}
+
+/* ── LOGIN ── */
+#loginSection{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 60px);padding:2rem}
+.login-box{background:var(--white);border:1px solid var(--border);padding:2.5rem;width:100%;max-width:360px}
+.login-box h2{font-size:1.3rem;color:var(--dark);margin-bottom:0.4rem}
+.login-box p{font-size:0.82rem;color:var(--soft);margin-bottom:1.8rem}
+.lg{margin-bottom:1rem}
+.lg label{display:block;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--soft);margin-bottom:0.3rem}
+.lg input{width:100%;border:1px solid var(--border);padding:0.6rem 0.85rem;font-size:0.88rem;outline:none;font-family:inherit}
+.lg input:focus{border-color:var(--gold)}
+.login-btn{width:100%;background:var(--gold);color:#fff;border:none;padding:0.75rem;font-size:0.85rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;margin-top:0.5rem;font-family:inherit}
+.login-btn:hover{background:var(--dark)}
+#loginError{color:#c0392b;font-size:0.8rem;margin-top:0.5rem;min-height:1rem}
+
+/* ── DASHBOARD ── */
+#dashboard{display:none;padding:2rem}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:2rem}
+.stat-card{background:var(--white);border:1px solid var(--border);padding:1.3rem 1.5rem}
+.stat-card .label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--soft);margin-bottom:0.4rem}
+.stat-card .value{font-size:2rem;font-weight:600;color:var(--gold);line-height:1}
+.stat-card.today .value{color:var(--dark)}
+
+.toolbar{display:flex;align-items:center;gap:0.8rem;margin-bottom:1.2rem;flex-wrap:wrap}
+.toolbar h2{font-size:1.1rem;color:var(--dark);font-weight:500;flex:1}
+.filter-btn{background:var(--warm);color:var(--mid);border:1px solid var(--border);padding:0.4rem 1rem;font-size:0.78rem;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;font-family:inherit;transition:all .2s}
+.filter-btn.active,.filter-btn:hover{background:var(--gold);color:#fff;border-color:var(--gold)}
+.refresh-btn{background:var(--dark);color:#fff;border:none;padding:0.4rem 1rem;font-size:0.78rem;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;font-family:inherit}
+
+.table-wrap{background:var(--white);border:1px solid var(--border);overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+thead th{background:var(--warm);padding:0.75rem 1rem;text-align:left;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.08em;color:var(--soft);font-weight:500;border-bottom:1px solid var(--border);white-space:nowrap}
+tbody td{padding:0.75rem 1rem;font-size:0.84rem;border-bottom:1px solid var(--border);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--cream)}
+
+.badge{display:inline-block;padding:0.2rem 0.6rem;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.06em;border-radius:2px;font-weight:500}
+.badge-new{background:#e8f4fd;color:#1a6fa3}
+.badge-contacted{background:#fff3e0;color:#e07a2f}
+.badge-closed{background:#eaf5ea;color:#2d6a4f}
+
+.action-btns{display:flex;align-items:center;gap:0.5rem}
+.btn-wa{background:#25d366;color:#fff;padding:0.28rem 0.6rem;font-size:0.72rem;text-decoration:none;border-radius:2px;font-weight:500}
+.status-sel{border:1px solid var(--border);padding:0.25rem 0.5rem;font-size:0.76rem;font-family:inherit;background:var(--cream);cursor:pointer;outline:none}
+.status-sel:focus{border-color:var(--gold)}
+.btn-del{background:none;border:1px solid #fecaca;color:#c0392b;padding:0.28rem 0.55rem;font-size:0.76rem;cursor:pointer;font-family:inherit;border-radius:2px}
+.btn-del:hover{background:#fecaca}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>&#9776; Gopal Building Material &mdash; Admin Dashboard</h1>
+  <span id="topDate"></span>
+</div>
+
+<div id="loginSection">
+  <div class="login-box">
+    <h2>Admin Login</h2>
+    <p>Enter your credentials to access the dashboard.</p>
+    <form id="loginForm">
+      <div class="lg"><label>Username</label><input type="text" id="adminUser" placeholder="admin" autocomplete="username"/></div>
+      <div class="lg"><label>Password</label><input type="password" id="adminPass" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" autocomplete="current-password"/></div>
+      <button type="submit" class="login-btn">Login</button>
+      <div id="loginError"></div>
+    </form>
+  </div>
+</div>
+
+<div id="dashboard">
+  <div class="stats-row">
+    <div class="stat-card"><div class="label">Total Enquiries</div><div class="value" id="statTotal">—</div></div>
+    <div class="stat-card"><div class="label">New</div><div class="value" id="statNew" style="color:#1a6fa3">—</div></div>
+    <div class="stat-card"><div class="label">Contacted</div><div class="value" id="statContacted" style="color:#e07a2f">—</div></div>
+    <div class="stat-card today"><div class="label">Today</div><div class="value" id="statToday">—</div></div>
+  </div>
+
+  <div class="toolbar">
+    <h2>Enquiries</h2>
+    <button class="filter-btn active" data-status="">All</button>
+    <button class="filter-btn" data-status="new">New</button>
+    <button class="filter-btn" data-status="contacted">Contacted</button>
+    <button class="filter-btn" data-status="closed">Closed</button>
+    <button class="refresh-btn" onclick="loadStats();loadEnquiries()">&#8635; Refresh</button>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Name</th>
+          <th>Phone</th>
+          <th>Service</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="enquiryTable">
+        <tr><td colspan="6" style="text-align:center;padding:2rem;color:#8a7060">Login to view enquiries</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  document.getElementById('topDate').textContent = new Date().toLocaleDateString('en-IN', {weekday:'long',year:'numeric',month:'long',day:'numeric'});
+</script>
+<script src="/js/admin.js"></script>
+</body>
+</html>
