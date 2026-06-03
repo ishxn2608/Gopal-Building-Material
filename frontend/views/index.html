@@ -259,68 +259,45 @@
     </div>
     <div class="form-box">
       <h4>Send an Enquiry</h4>
-      <form id="enquiryForm" novalidate>
-        <div class="fg"><label>Your Name *</label><input type="text" name="name" placeholder="Full name" required/></div>
-        <div class="fg"><label>Phone Number *</label><input type="tel" name="phone" placeholder="+91 XXXXX XXXXX" required/></div>
-        <div class="fg">
-          <label>I Need</label>
-          <select name="service">
-            <option value="Other">Select a service&hellip;</option>
-            <option>Home Furniture</option>
-            <option>Office Furniture</option>
-            <option>Custom / Modular Work</option>
-            <option>Complete Interior Setup</option>
-            <option>Doors &amp; Windows</option>
-            <option>Repair &amp; Restoration</option>
-            <option>Other</option>
-          </select>
-        </div>
-        <div class="fg"><label>Message</label><textarea name="message" placeholder="Describe your requirement&hellip;"></textarea></div>
-        <div id="formMessage" class="form-msg"></div>
-        <button type="submit" class="send-btn">Send via WhatsApp ↗</button>
-      </form>
+<!-- Scroll upward inside your code window to find your form wrapper block -->
+<div class="contact-form-panel">
+  <h3>Send an Enquiry</h3>
+  <form id="enquiryForm">
+    <div class="form-group">
+      <label>Your Name *</label>
+      <input type="text" name="name" placeholder="John Doe" required />
     </div>
-  </div>
-</section>
-
-<h2 class="map-sec-title">Gopal Building Material - Thandla</h2>
-<div class="map-sec">
-  <iframe
-    title="Gopal Building Material – Exact Location in Thandla, Jhabua, MP"
-    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3670.123456789!2d74.5678215!3d23.0069355!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39613fe5ac662139%3A0xf05999830b557042!2sGopal%20Building%20Material!5e0!3m2!1sen!2sin!4v1748592000000"
-    allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" style="border:none;width:100%;height:100%;">
-  </iframe>
+    <div class="form-group">
+      <label>Phone Number *</label>
+      <input type="tel" name="phone" placeholder="9876543210" required />
+    </div>
+    <div class="form-group">
+      <label>I Need</label>
+      <select name="service">
+        <option value="Home Furniture">Home Furniture Solutions</option>
+        <option value="Office Furniture">Office Workplace Setup</option>
+        <option value="Custom / Modular Work">Custom / Modular Build</option>
+        <option value="Complete Interior">Full Interior Renovation</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Message</label>
+      <textarea name="message" rows="4" placeholder="Tell us about your spatial requirements..."></textarea>
+    </div>
+    
+    <!-- Exact button class matching setup -->
+    <button type="submit" class="send-btn">Send via WhatsApp ↗</button>
+    <div id="formMessage" class="form-msg"></div>
+  </form>
 </div>
 
 <footer>
-  <div class="footer-logo">
-    <div class="name">Gopal Building Material</div>
-    <div class="sub">Thandla &middot; Dist. Jhabua &middot; MP</div>
-  </div>
-  <div class="footer-mid">
-    <ul class="footer-links">
-      <li><a href="#about">About</a></li>
-      <li><a href="#services">Services</a></li>
-      <li><a href="#products">Products</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-    <div class="footer-copy">&copy; 2025 Gopal Building Material &middot; All rights reserved</div>
-  </div>
-  <div class="footer-right">
-    Owned by Chandrashekhar Acharya<br/>
-    <a href="mailto:thegopalbuildingmaterial@gmail.com">thegopalbuildingmaterial@gmail.com</a>
-  </div>
+  <p>&copy; 2026 Gopal Building Material (Thandla). All Rights Reserved.</p>
+  <p style="font-size: 0.8rem; margin-top: 0.4rem; opacity: 0.5;">Crafted by Chandrashekhar Acharya</p>
 </footer>
 
-<a href="https://wa.me/917999425817" target="_blank" class="wa-float" aria-label="Chat on WhatsApp">
-  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="white">
-    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
-    <path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.978-1.421A9.953 9.953 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2zm0 18a7.953 7.953 0 0 1-4.341-1.285l-.31-.187-3.233.923.936-3.14-.204-.325A7.96 7.96 0 0 1 4 12c0-4.411 3.589-8 8-8s8 3.589 8 8-3.589 8-8 8z"/>
-  </svg>
-</a>
-
-<!-- Forces user browsers to drop old configurations and pick up the fast changes immediately -->
-<script src="/js/main.js?v=15"></script>
+<!-- ✅ CACHE VERSION BUMPED TO 30: Forces immediate download of the optimized script engine -->
+<script src="/js/main.js?v=30"></script>
 
 </body>
 </html>
