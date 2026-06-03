@@ -70,15 +70,15 @@ document.addEventListener('DOMContentLoaded', () => {
         // Also open WhatsApp as a bonus
         setTimeout(() => {
           const text = encodeURIComponent(
-            `Hi Gopal Building Material! I'm interested in ${data.service}. Name: ${data.name}, Phone: ${data.phone}. ${data.message}`
+            `Hi Gopal Building Material! I'm interested in ${data.service}. Name: ${data.name}, Phone: ${data.phone}. Message: ${data.message}`
           );
           window.open(`https://wa.me/917999425817?text=${text}`, '_blank');
         }, 1000);
       } else {
-        showMsg(msgBox, result.message || 'Error sending enquiry.', 'error');
+        showMsg(msgBox, '❌ ' + (result.message || 'Error sending enquiry.'), 'error');
       }
     } catch (err) {
-      showMsg(msgBox, 'Network error. Please try again.', 'error');
+      showMsg(msgBox, '❌ Network error. Please try again.', 'error');
     } finally {
       btn.disabled = false;
       btn.textContent = 'Send via WhatsApp ↗';
@@ -89,11 +89,9 @@ document.addEventListener('DOMContentLoaded', () => {
     box.textContent = text;
     box.className = `form-msg ${type}`;
     box.style.display = 'block';
-    if (type === 'success') {
-      setTimeout(() => {
-        box.style.display = 'none';
-      }, 4000);
-    }
+    setTimeout(() => {
+      box.style.display = 'none';
+    }, 5000);
   }
 
   // ── Parallax effect on hero ──────────────────────────────────
@@ -118,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     countElements.forEach(el => {
       const target = parseInt(el.textContent);
-      if (isNaN(target)) return; // Skip non-numeric content
+      if (isNaN(target)) return;
 
       let current = 0;
       const increment = Math.ceil(target / 30);
@@ -146,30 +144,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }, { threshold: 0.3 });
     statsObserver.observe(statsSection);
-  }
-
-});
-
-            `Hello, I just submitted an enquiry on your website.\nName: ${data.name}\nService: ${data.service}\nMessage: ${data.message}`
-          );
-          window.open('https://wa.me/917999425817?text=' + text, '_blank');
-        }, 1200);
-      } else {
-        showMsg(msgBox, '❌ ' + result.message, 'error');
-      }
-    } catch (err) {
-      showMsg(msgBox, '❌ Network error. Please try again.', 'error');
-    } finally {
-      btn.disabled = false;
-      btn.textContent = 'Send via WhatsApp ↗';
-    }
-  });
-
-  function showMsg(el, text, type) {
-    el.textContent = text;
-    el.className = 'form-msg ' + type;
-    el.style.display = 'block';
-    setTimeout(() => { el.style.display = 'none'; }, 6000);
   }
 
 });
