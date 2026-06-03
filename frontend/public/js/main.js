@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }, observerOptions);
 
-  // Observe all sections and cards
   document.querySelectorAll('.sec, .srv-card, .prd-card, .why-item, .sec-center').forEach(el => {
     observer.observe(el);
   });
@@ -42,11 +41,17 @@ document.addEventListener('DOMContentLoaded', () => {
       const btn = form.querySelector('.send-btn');
       const msgBox = document.getElementById('formMessage');
 
+      // ✅ FIXED: Safer value selection from input tags
+      const nameInput = form.querySelector('[name="name"]');
+      const phoneInput = form.querySelector('[name="phone"]');
+      const serviceSelect = form.querySelector('[name="service"]');
+      const messageTextarea = form.querySelector('[name="message"]');
+
       const data = {
-        name:    form.name.value.trim(),
-        phone:   form.phone.value.trim(),
-        service: form.service.value,
-        message: form.message.value.trim()
+        name:    nameInput ? nameInput.value.trim() : '',
+        phone:   phoneInput ? phoneInput.value.trim() : '',
+        service: serviceSelect ? serviceSelect.value : 'Home Furniture',
+        message: messageTextarea ? messageTextarea.value.trim() : ''
       };
 
       if (!data.name) return showMsg(msgBox, 'Please enter your name.', 'error');
@@ -64,24 +69,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const result = await res.json();
 
         if (result.success) {
-          showMsg(msgBox, '✅ ' + result.message, 'success');
+          // ✅ INSTANTLY show the success popup
+          showMsg(msgBox, '✅ Enquiry sent successfully!', 'success');
           form.reset();
           
-          // ✅ FIXED: Direct link syntax ensures smooth redirection without freezing the layout
+          // Redirect to WhatsApp smoothly after a short delay
           const text = encodeURIComponent(
             `Hi Gopal Building Material! I'm interested in ${data.service}. Name: ${data.name}, Phone: ${data.phone}. Message: ${data.message}`
           );
-          
           setTimeout(() => {
             window.location.href = `https://wa.me{text}`;
-          }, 800);
+          }, 600);
         } else {
           showMsg(msgBox, '❌ ' + (result.message || 'Error sending enquiry.'), 'error');
-          btn.disabled = false;
-          btn.textContent = 'Send via WhatsApp ↗';
         }
       } catch (err) {
         showMsg(msgBox, '❌ Network error. Please try again.', 'error');
+      } finally {
+        // ✅ ALWAYS unfreeze and restore button text immediately
         btn.disabled = false;
         btn.textContent = 'Send via WhatsApp ↗';
       }
@@ -89,12 +94,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function showMsg(box, text, type) {
+    if (!box) return;
     box.textContent = text;
     box.className = `form-msg ${type}`;
     box.style.display = 'block';
     setTimeout(() => {
       box.style.display = 'none';
-    }, 5000);
+    }, 6000);
   }
 
   // ── Parallax effect on hero ──────────────────────────────────
@@ -135,7 +141,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
-  // Trigger counter animation when stats section is in view
   const statsSection = document.querySelector('.stats');
   if (statsSection) {
     const statsObserver = new IntersectionObserver((entries) => {
