@@ -66,19 +66,22 @@ document.addEventListener('DOMContentLoaded', () => {
         if (result.success) {
           showMsg(msgBox, '✅ ' + result.message, 'success');
           form.reset();
-          // Optional WhatsApp fallback shortcut
+          
+          // ✅ FIXED: Direct link syntax ensures smooth redirection without freezing the layout
+          const text = encodeURIComponent(
+            `Hi Gopal Building Material! I'm interested in ${data.service}. Name: ${data.name}, Phone: ${data.phone}. Message: ${data.message}`
+          );
+          
           setTimeout(() => {
-            const text = encodeURIComponent(
-              `Hi Gopal Building Material! I'm interested in ${data.service}. Name: ${data.name}, Phone: ${data.phone}. Message: ${data.message}`
-            );
-            window.open(`https://wa.me{text}`, '_blank');
-          }, 1000);
+            window.location.href = `https://wa.me{text}`;
+          }, 800);
         } else {
           showMsg(msgBox, '❌ ' + (result.message || 'Error sending enquiry.'), 'error');
+          btn.disabled = false;
+          btn.textContent = 'Send via WhatsApp ↗';
         }
       } catch (err) {
         showMsg(msgBox, '❌ Network error. Please try again.', 'error');
-      } finally {
         btn.disabled = false;
         btn.textContent = 'Send via WhatsApp ↗';
       }
