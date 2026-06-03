@@ -1,16 +1,15 @@
-require('dotenv').config();
+// ✅ Change this line at the very top of your file
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+
 console.log('📝 Loading environment variables...');
+// Add this debug log to make sure the file is actively being read:
+console.log('🔗 Detected Port from .env:', process.env.PORT); 
 
 const express = require('express');
 const cors = require('cors');
-const helmet = require('helmet');
-const morgan = require('morgan');
-const path = require('path');
-const connectDB = require('./config/db');
+// ... rest of your code remains exactly the same
 
-console.log('📦 Dependencies loaded successfully');
-
-const app = express();
 
 // ── Connect Database ───────────────────────────────────────────
 console.log('🔗 Initializing database connection...');
