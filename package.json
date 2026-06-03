@@ -4,8 +4,8 @@
   "description": "Full-stack website for Gopal Building Material, Thandla, Jhabua",
   "main": "backend/server.js",
   "scripts": {
-    "start": "node backend/server.js",
-    "dev": "nodemon backend/server.js"
+    "start": "node --env-file=.env backend/server.js",
+    "dev": "nodemon --env-file=.env backend/server.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
