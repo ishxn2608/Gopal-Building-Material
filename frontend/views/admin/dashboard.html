@@ -68,7 +68,7 @@ tbody tr:hover{background:var(--cream)}
 <body>
 
 <div class="topbar">
-  <h1>&#9776; Gopal Building Material &mdash; Admin Dashboard</h1>
+  <h1>☰ Gopal Building Material &mdash; Admin Dashboard</h1>
   <span id="topDate"></span>
 </div>
 
@@ -99,7 +99,7 @@ tbody tr:hover{background:var(--cream)}
     <button class="filter-btn" data-status="new">New</button>
     <button class="filter-btn" data-status="contacted">Contacted</button>
     <button class="filter-btn" data-status="closed">Closed</button>
-    <button class="refresh-btn" onclick="loadStats();loadEnquiries()">&#8635; Refresh</button>
+    <button class="refresh-btn" onclick="loadEnquiries()">↻ Refresh</button>
   </div>
 
   <div class="table-wrap">
@@ -110,12 +110,12 @@ tbody tr:hover{background:var(--cream)}
           <th>Name</th>
           <th>Phone</th>
           <th>Service</th>
-          <th>Status</th>
+          <th>Message</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody id="enquiryTable">
-        <tr><td colspan="6" style="text-align:center;padding:2rem;color:#8a7060">Login to view enquiries</td></tr>
+        <tr><td colspan="6" style="text-align:center;padding:2rem;color:#8a7060">Loading data stream...</td></tr>
       </tbody>
     </table>
   </div>
@@ -124,6 +124,79 @@ tbody tr:hover{background:var(--cream)}
 <script>
   document.getElementById('topDate').textContent = new Date().toLocaleDateString('en-IN', {weekday:'long',year:'numeric',month:'long',day:'numeric'});
 </script>
+
+<!-- The main admin core logic -->
 <script src="/js/admin.js"></script>
+
+<!-- Dynamic data streaming logic -->
+<script>
+  async function loadEnquiries() {
+    try {
+      const res = await fetch('/api/enquiry'); 
+      const result = await res.json();
+      
+      if (result.success && result.data) {
+        // ✅ ID Fix: Target 'enquiryTable' exactly
+        const tableBody = document.getElementById('enquiryTable');
+        if (!tableBody) return;
+        tableBody.innerHTML = ''; 
+        
+        if(result.data.length === 0) {
+          tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:2rem;color:#8a7060">No enquiries found in database.</td></tr>`;
+          return;
+        }
+
+        result.data.forEach((enquiry) => {
+          const formattedDate = new Date(enquiry.createdAt).toLocaleDateString('en-IN', {
+            day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'
+          });
+
+          tableBody.innerHTML += `
+            <tr>
+              <td><strong>${formattedDate}</strong></td>
+              <td>${enquiry.name}</td>
+              <td><a href="tel:${enquiry.phone}" style="color:inherit; text-decoration:none;">${enquiry.phone}</a></td>
+              <td><span class="badge badge-new">${enquiry.service}</span></td>
+              <td>${enquiry.message || '-'}</td>
+              <td>
+                <div class="action-btns">
+                  <a href="https://wa.me{encodeURIComponent(enquiry.name)}" target="_blank" class="btn-wa">WhatsApp</a>
+                </div>
+              </td>
+            </tr>
+          `;
+        });
+
+        // Calculate basic stats counter dynamically
+        if(document.getElementById('statTotal')) {
+          document.getElementById('statTotal').textContent = result.data.length;
+          document.getElementById('statNew').textContent = result.data.length;
+          document.getElementById('statContacted').textContent = '0';
+          document.getElementById('statToday').textContent = result.data.filter(e => {
+            return new Date(e.createdAt).toDateString() === new Date().toDateString();
+          }).length;
+        }
+      }
+    } catch (err) {
+      console.error("Failed to load enquiries inside admin panel:", err);
+    }
+  }
+
+  // Hook layout update monitoring loop
+  document.addEventListener('DOMContentLoaded', () => {
+    // If admin dashboard is visible immediately (bypassed login), render entries
+    if (document.getElementById('dashboard').style.display === 'block' || window.getComputedStyle(document.getElementById('dashboard')).display === 'block') {
+      loadEnquiries();
+    }
+    
+    // Add automatic checking handler when login form completes successfully
+    const formElement = document.getElementById('loginForm');
+    if(formElement) {
+      formElement.addEventListener('submit', () => {
+        setTimeout(loadEnquiries, 600); // Trigger data fetch right after authentication animation finishes
+      });
+    }
+  });
+</script>
 </body>
 </html>

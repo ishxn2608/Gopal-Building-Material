@@ -34,56 +34,56 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // ── Enquiry Form ─────────────────────────────────────────────
+  // ── Enquiry Form Submission Handler ──────────────────────────
   const form = document.getElementById('enquiryForm');
-  if (!form) return;
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = form.querySelector('.send-btn');
+      const msgBox = document.getElementById('formMessage');
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const btn = form.querySelector('.send-btn');
-    const msgBox = document.getElementById('formMessage');
+      const data = {
+        name:    form.name.value.trim(),
+        phone:   form.phone.value.trim(),
+        service: form.service.value,
+        message: form.message.value.trim()
+      };
 
-    const data = {
-      name:    form.name.value.trim(),
-      phone:   form.phone.value.trim(),
-      service: form.service.value,
-      message: form.message.value.trim()
-    };
+      if (!data.name) return showMsg(msgBox, 'Please enter your name.', 'error');
+      if (!data.phone) return showMsg(msgBox, 'Please enter your phone number.', 'error');
 
-    if (!data.name) return showMsg(msgBox, 'Please enter your name.', 'error');
-    if (!data.phone) return showMsg(msgBox, 'Please enter your phone number.', 'error');
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
 
-    btn.disabled = true;
-    btn.textContent = 'Sending…';
+      try {
+        const res = await fetch('/api/enquiry', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const result = await res.json();
 
-    try {
-      const res = await fetch('/api/enquiry', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-      const result = await res.json();
-
-      if (result.success) {
-        showMsg(msgBox, '✅ ' + result.message, 'success');
-        form.reset();
-        // Also open WhatsApp as a bonus
-        setTimeout(() => {
-          const text = encodeURIComponent(
-            `Hi Gopal Building Material! I'm interested in ${data.service}. Name: ${data.name}, Phone: ${data.phone}. Message: ${data.message}`
-          );
-          window.open(`https://wa.me/917999425817?text=${text}`, '_blank');
-        }, 1000);
-      } else {
-        showMsg(msgBox, '❌ ' + (result.message || 'Error sending enquiry.'), 'error');
+        if (result.success) {
+          showMsg(msgBox, '✅ ' + result.message, 'success');
+          form.reset();
+          // Optional WhatsApp fallback shortcut
+          setTimeout(() => {
+            const text = encodeURIComponent(
+              `Hi Gopal Building Material! I'm interested in ${data.service}. Name: ${data.name}, Phone: ${data.phone}. Message: ${data.message}`
+            );
+            window.open(`https://wa.me{text}`, '_blank');
+          }, 1000);
+        } else {
+          showMsg(msgBox, '❌ ' + (result.message || 'Error sending enquiry.'), 'error');
+        }
+      } catch (err) {
+        showMsg(msgBox, '❌ Network error. Please try again.', 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Send via WhatsApp ↗';
       }
-    } catch (err) {
-      showMsg(msgBox, '❌ Network error. Please try again.', 'error');
-    } finally {
-      btn.disabled = false;
-      btn.textContent = 'Send via WhatsApp ↗';
-    }
-  });
+    });
+  }
 
   function showMsg(box, text, type) {
     box.textContent = text;
@@ -145,5 +145,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { threshold: 0.3 });
     statsObserver.observe(statsSection);
   }
-
 });
